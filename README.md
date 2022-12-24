@@ -18,7 +18,7 @@
 
 | Metric | type | Description | labels | value | implemented |
 | --- | --- | -- | -- | -- | -- |
-| sim_volume | gauge | Number of sim cards in the system | N/A | int | ✅ |
+| sim_volume | gauge | Number of sim cards in the system | N/A | int | ❌ |
 | sim_inventory_status | gauge | Number of SIMs in inventory by status. | status | int | ❌ |
 | sim_inventory_subscription | gauge | Number of SIMs in inventory by subscription. | subscription | int | ❌ |
 
