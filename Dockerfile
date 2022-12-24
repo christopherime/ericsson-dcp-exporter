@@ -22,3 +22,4 @@ FROM alpine:latest
 COPY --from=builder /go/src/build/ericsson-dcp-exporter /usr/local/bin/ericsson-dcp-exporter
 RUN mkdir /etc/ericsson-dcp-exporter
 CMD ["/usr/local/bin/ericsson-dcp-exporter"]
+EXPOSE 9742

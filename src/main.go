@@ -44,5 +44,5 @@ func main() {
 	dcpScrapeDurationSeconds.Set(elapsed.Seconds())
 
 	http.Handle("/metrics", promhttp.Handler())
-	http.ListenAndServe(":2112", nil)
+	http.ListenAndServe(":9742", nil)
 }
