@@ -1,0 +1,13 @@
+.gitignore
+model/
+docker-compose.*
+LICENSE
+README.md
+doc
+*tmp*
+docs/
+example/
+.env
+.gitignore
+.gitlab-ci.yml
+.github/
