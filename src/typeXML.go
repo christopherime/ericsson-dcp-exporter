@@ -50,3 +50,49 @@ type EnvelopeRespEcho struct {
 		} `xml:"EchoResponse"`
 	} `xml:"Body"`
 }
+
+type EnvelopeObjectSubMgmt struct {
+	XMLName xml.Name     `xml:"soapenv:Envelope"`
+	Text    string       `xml:",chardata"`
+	Soapenv string       `xml:"xmlns:soapenv,attr"`
+	Sub     string       `xml:"xmlns:sub,attr"`
+	Header  HeaderObject `xml:"soapenv:Header"`
+	Body    struct {
+		Text                      string `xml:",chardata"`
+		QuerySubscriptionsRequest struct {
+			Text                string `xml:",chardata"`
+			SubscriptionPackage string `xml:"subscriptionPackage"`
+			MaxResults          string `xml:"maxResults"`
+		} `xml:"sub:QuerySubscriptionsRequest"`
+	} `xml:"soapenv:Body"`
+}
+
+type EnvelopeRespSubMgmt struct {
+	XMLName xml.Name `xml:"Envelope"`
+	Text    string   `xml:",chardata"`
+	Env     string   `xml:"env,attr"`
+	Header  string   `xml:"Header"`
+	Body    struct {
+		Text                       string `xml:",chardata"`
+		QuerySubscriptionsResponse struct {
+			Text          string `xml:",chardata"`
+			Ns2           string `xml:"ns2,attr"`
+			Subscriptions struct {
+				Text         string `xml:",chardata"`
+				Subscription []struct {
+					Text                    string `xml:",chardata"`
+					Imsi                    string `xml:"imsi"`
+					Msisdn                  string `xml:"msisdn"`
+					CustomerLabel           string `xml:"customerLabel"`
+					SubscriptionPackageName string `xml:"subscriptionPackageName"`
+					LastOperator            string `xml:"lastOperator"`
+					LastCountry             string `xml:"lastCountry"`
+					LastLocationUpdate      string `xml:"lastLocationUpdate"`
+					LastPDPContext          string `xml:"lastPDPContext"`
+					LastNetworkActivity     string `xml:"lastNetworkActivity"`
+					LastSMS                 string `xml:"lastSMS"`
+				} `xml:"subscription"`
+			} `xml:"subscriptions"`
+		} `xml:"QuerySubscriptionsResponse"`
+	} `xml:"Body"`
+}

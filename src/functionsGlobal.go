@@ -20,6 +20,8 @@ func LoadConfig() (TypeConfig, error) {
 		return config, err
 	}
 
+	return config, nil
+
 }
 
 func HTTPCaller(bodySend string, urlSend string, methodSend string, contentTypeSend string) (string, error) {
@@ -57,8 +59,14 @@ func HTTPCaller(bodySend string, urlSend string, methodSend string, contentTypeS
 
 }
 
-func Sleeping5() {
+func Sleeping5s() {
 
 	// Sleep for 5 seconds
 	time.Sleep(5 * time.Second)
+}
+
+func Sleeping1m() {
+
+	// Sleep for 1 minute
+	time.Sleep(1 * time.Minute)
 }

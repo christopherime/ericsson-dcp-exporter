@@ -32,6 +32,7 @@ subToWatch:
 | USERAUTH | base64 encode of the `username:password` | N/A |
 | URL | URL of the DCP API in format `https://my-website.com`, no need for the `wsdl` part | N/A |
 | SUBPACKAGE | Default subscription package ID to lookup for. For multiple package to watch, use the config.yaml | N/A |
+| MAXSIMS | Maximum number of SIMs to watch. If the number of SIMs is higher than this value, the exporter will not watch them | 5000 |
 
 ## Metrics
 
@@ -47,7 +48,7 @@ subToWatch:
 
 | Metric | type | Description | labels | value | implemented |
 | --- | --- | -- | -- | -- | -- |
-| sim_volume | gauge | Number of sim cards in the system | subscription | int | ❌ |
+| sim_volume | gauge | Number of sim cards in the system | N/A | int | ❌ |
 | sim_inventory_status | gauge | Number of SIMs in inventory by status. | status | int | ❌ |
 | sim_inventory_subscription | gauge | Number of SIMs in inventory by subscription. | subscription | int | ❌ |
 

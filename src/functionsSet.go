@@ -16,7 +16,6 @@ func SetApiStatusMetric(authInfo *HeaderObject, url string, flagOnline *bool) {
 			valPint, err := GetEchoHost(authInfo, url)
 			if err != nil {
 				log.Printf("error: %v\n", err)
-
 			}
 
 			flagOnline = &valPint
@@ -27,21 +26,24 @@ func SetApiStatusMetric(authInfo *HeaderObject, url string, flagOnline *bool) {
 			} else {
 				apiStatus.With(prometheus.Labels{"url": url}).Set(1)
 			}
-			Sleeping5()
+			Sleeping5s()
 		}
 	}()
 }
 
-func SetSimVolumeMetric(authHeader *HeaderObject, url string, flagOnline *bool) {
-	if !*flagOnline {
-		return
-	}
-
+func SetSimVolumeMetric(authHeader *HeaderObject, url string, subPackage string, maxSims string) {
 	prometheus.MustRegister(simVolume)
 
 	go func() {
 		for {
-			Sleeping5()
+			volSim, err := GetSimVolume(authHeader, url, subPackage, maxSims)
+			if err != nil {
+				log.Printf("error: %v\n", err)
+			}
+
+			simVolume.Set(float64(volSim))
+
+			Sleeping1m()
 		}
 	}()
 }

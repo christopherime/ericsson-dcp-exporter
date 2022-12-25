@@ -17,7 +17,7 @@ var dcpScrapeError = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 	Help: "Error during a scraping the DCP",
 }, []string{"error"})
 
-var simVolume = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+var simVolume = prometheus.NewGauge(prometheus.GaugeOpts{
 	Name: "sim_volume",
 	Help: "Number of sim cards in the system",
-}, []string{"status"})
+})
