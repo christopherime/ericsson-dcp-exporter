@@ -4,9 +4,23 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
+
+func LoadConfig() (TypeConfig, error) {
+
+	var config TypeConfig
+
+	// check if config.yaml exists
+	if _, err := os.Stat("config.yaml"); os.IsNotExist(err) {
+		log.Printf("error: %v", err)
+		config.configPresent = false
+		return config, err
+	}
+
+}
 
 func HTTPCaller(bodySend string, urlSend string, methodSend string, contentTypeSend string) (string, error) {
 

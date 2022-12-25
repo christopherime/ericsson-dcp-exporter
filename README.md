@@ -2,7 +2,36 @@
 
 ## Description
 
->Ericsson Device Connection Platform Prometheus exporter.
+>Ericsson DCP service API Prometheus exporter.
+
+## Diagram
+
+```mermaid
+flowchart  RL
+    A[Prometheus]-->|http| B[Prometheus exporter]
+    B -->|http| C[DCP]
+```
+
+## Prerequisites
+
+- [Go](https://golang.org/doc/install) current (was dev with 1.19, didn't test with other versions)
+- config.yaml file (see [config.yaml](src/config.example.yaml) for an example)
+
+### config.yaml
+
+```yaml
+# subToWatch is a list of subscription to watch
+subToWatch:
+  - "subreddit1"
+  - "subreddit2"
+  - "subreddit3"
+```
+
+### Authentication
+
+The exporter will use the following environment variables to authenticate to the DCP API:
+- *USERAUTH* :  base64 encode of the `username:password`
+- *URL* : URL of the DCP API in format `https://my-website.com`, no need for the `wsdl` part
 
 ## Metrics
 
@@ -18,7 +47,7 @@
 
 | Metric | type | Description | labels | value | implemented |
 | --- | --- | -- | -- | -- | -- |
-| sim_volume | gauge | Number of sim cards in the system | N/A | int | ❌ |
+| sim_volume | gauge | Number of sim cards in the system | subscription | int | ❌ |
 | sim_inventory_status | gauge | Number of SIMs in inventory by status. | status | int | ❌ |
 | sim_inventory_subscription | gauge | Number of SIMs in inventory by subscription. | subscription | int | ❌ |
 
@@ -53,10 +82,16 @@ For these metrics, `status` stated in the value field corresponds to the followi
 | IMEI_D | IMEI Dectected on the SIM | STRING | sim_details |
 | IMEI_A | IMEI Attributed for the SIM | STRING | sim_details |
 
-## Diagram
+## Files
 
-```mermaid
-flowchart  RL
-    A[Prometheus]-->|http| B[Prometheus exporter]
-    B -->|http| C[DCP]
-```
+| File | Description |
+| --- | --- |
+| [config.example.yaml](src/config.example.yaml) | Example of config file |
+| [main.go](src/main.go) | Main file |
+| [metrics.go](src/metrics.go) | All metrics variables declaration |
+| [auth.go](src/auth.go) | Retrieve and decode auth value |
+| [functionsGlobal.go](src/functionsGlobal.go) | General cross code function like the HTTP client or config loader |
+| [functionsSet.go](src/functionsSet.go) | Setter function that define value metrics |
+| [functionsGet.go](src/functionsGet.go) | Getter function that will build and parse the XML Envelope |
+| [typeConfig.go](src/typeConfig.go) | Types for config loader functions |
+| [typeXML.go](src/typeXML.go) | Types for DCP API |

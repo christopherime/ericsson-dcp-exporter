@@ -12,6 +12,9 @@ import (
 
 func main() {
 
+	// Load value in config.yaml
+	config, _ = LoadConfig()
+
 	prometheus.MustRegister(dcpScrapeError)
 
 	// dcpScrapeError is true since I presume that it will working at the start
