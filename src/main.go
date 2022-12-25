@@ -13,7 +13,12 @@ import (
 func main() {
 
 	// Load value in config.yaml
-	config, _ = LoadConfig()
+	config, _ := LoadConfig()
+	if !config.configPresent {
+		log.Printf("No pre config present, using default values")
+		subWatch := os.Getenv("SUBPACKAGE")
+		config.configValues.SubToWatch = append(config.configValues.SubToWatch, subWatch)
+	}
 
 	prometheus.MustRegister(dcpScrapeError)
 

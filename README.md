@@ -12,8 +12,6 @@ flowchart  RL
     B -->|http| C[DCP]
 ```
 
-## Prerequisites
-
 - [Go](https://golang.org/doc/install) current (was dev with 1.19, didn't test with other versions)
 - config.yaml file (see [config.yaml](src/config.example.yaml) for an example)
 
@@ -27,11 +25,13 @@ subToWatch:
   - "subreddit3"
 ```
 
-### Authentication
+## Environment variables
 
-The exporter will use the following environment variables to authenticate to the DCP API:
-- *USERAUTH* :  base64 encode of the `username:password`
-- *URL* : URL of the DCP API in format `https://my-website.com`, no need for the `wsdl` part
+| Variable | Description | Default value |
+| --- | --- | -- |
+| USERAUTH | base64 encode of the `username:password` | N/A |
+| URL | URL of the DCP API in format `https://my-website.com`, no need for the `wsdl` part | N/A |
+| SUBPACKAGE | Default subscription package ID to lookup for. For multiple package to watch, use the config.yaml | N/A |
 
 ## Metrics
 
