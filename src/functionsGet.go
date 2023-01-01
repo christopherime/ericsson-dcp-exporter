@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"log"
 
+	"github.com/dgraph-io/badger/v3"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -57,7 +58,9 @@ func GetEchoHost(authHeader *HeaderObject, url string) (bool, error) {
 	return isEcho, nil
 }
 
-func GetSimVolume(authHeader *HeaderObject, url string, subPackage string, maxSims string) (int, error) {
+// Get the number of SIMs in a subscription package
+// also store the imsi value of each SIM in a badger db for later use
+func GetSimVolume(authHeader *HeaderObject, url string, subPackage string, maxSims string, badger *badger.DB) (int, error) {
 
 	urlSub := url + "/dcpapi/SubscriptionManagement?WSDL"
 
@@ -100,8 +103,44 @@ func GetSimVolume(authHeader *HeaderObject, url string, subPackage string, maxSi
 		return 0, err
 	}
 
+	// Store the IMSI in a badger db
+
+	go SaveBadgerDB(envelopeResp, badger)
+
 	// Count the number of subscription in the response
 	simVolume := len(envelopeResp.Body.QuerySubscriptionsResponse.Subscriptions.Subscription)
 
 	return simVolume, nil
+}
+
+// Read the database and return the Imsi
+func GetImsiByKey(key string, badger *badger.DB) ([]string, error) {
+	var Imsi string
+	var ImsiList []string
+
+	// Read the database
+	Txn := badger.NewTransaction(false)
+	defer Txn.Discard()
+
+	// Get the Imsi from the database
+	item, err := Txn.Get([]byte(key))
+	if err != nil {
+		log.Printf("error: %v", err)
+		return nil, err
+	}
+
+	// Convert the Imsi to a string
+	err = item.Value(func(val []byte) error {
+		Imsi = string(val)
+		return nil
+	})
+	if err != nil {
+		log.Printf("error: %v", err)
+		return nil, err
+	}
+
+	// Append the Imsi to the ImsiList
+	ImsiList = append(ImsiList, Imsi)
+
+	return ImsiList, nil
 }

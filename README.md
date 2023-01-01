@@ -4,6 +4,11 @@
 
 >Ericsson DCP service API Prometheus exporter.
 
+## TODO
+
+- [ ] Current limitation to max 2000 SIMs, Find a better way to bypass this limitation
+
+
 ## Diagram
 
 ```mermaid
@@ -25,6 +30,14 @@ subToWatch:
   - "subreddit3"
 ```
 
+## Database
+
+Sims value are store in a database with the following structure:
+
+| Column | Value |
+| --- | --- |
+| Subscription Package Name as string | Sim Imsi value as string |
+
 ## Environment variables
 
 | Variable | Description | Default value |
@@ -32,7 +45,7 @@ subToWatch:
 | USERAUTH | base64 encode of the `username:password` | N/A |
 | URL | URL of the DCP API in format `https://my-website.com`, no need for the `wsdl` part | N/A |
 | SUBPACKAGE | Default subscription package ID to lookup for. For multiple package to watch, use the config.yaml | N/A |
-| MAXSIMS | Maximum number of SIMs to watch. If the number of SIMs is higher than this value, the exporter will not watch them | 5000 |
+| MAXSIMS | Maximum number of SIMs to watch. If the number of SIMs is higher than this value, the exporter will not watch them | 2000 |
 
 ## Metrics
 

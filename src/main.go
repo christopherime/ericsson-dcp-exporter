@@ -10,6 +10,16 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+// TODO: SetSimDetailsMetric to finish
+
+func Init() {
+	// If there is a badger folder, delete it
+	if _, err := os.Stat("badger"); !os.IsNotExist(err) {
+		os.RemoveAll("badger")
+	}
+
+}
+
 func main() {
 
 	log.Println("Starting DCP exporter on port 9742...")
@@ -18,6 +28,12 @@ func main() {
 	url := os.Getenv("URL")
 
 	var subWatch string
+
+	// Create a new badger DB to store the SIMs values
+	badgerDB, err := ExistBadgerDB("badger")
+	if err != nil {
+		log.Printf("error: %v", err)
+	}
 
 	prometheus.MustRegister(dcpScrapeError, dcpScrapeDurationSeconds)
 
@@ -31,7 +47,7 @@ func main() {
 	// maxSims the maximum number of sims to be scraped
 	maxSims := os.Getenv("MAXSIMS")
 	if maxSims == "" {
-		maxSims = "5000"
+		maxSims = "2000"
 	}
 
 	// dcpScrapeError is true since I presume that it will working at the start
@@ -46,7 +62,7 @@ func main() {
 	authHeader.Security.Wsse = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
 	authHeader.Security.Wsu = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
 
-	err := GetAuthValues(&authHeader.Security.UsernameToken.Username, &authHeader.Security.UsernameToken.Password)
+	err = GetAuthValues(&authHeader.Security.UsernameToken.Username, &authHeader.Security.UsernameToken.Password)
 	if err != nil {
 		log.Printf("error: %v\n", err)
 		flagOnline = false
@@ -65,13 +81,20 @@ func main() {
 		// test if config.configValues is empty
 		if len(config.configValues.SubToWatch) == 0 {
 			log.Printf("No config present, using default values")
-			SetSimVolumeMetric(&authHeader, url, subWatch, maxSims)
+			SetSimVolumeMetric(&authHeader, url, subWatch, maxSims, badgerDB)
 		} else {
 			log.Printf("Config present, using config values")
 			for _, subpackage := range config.configValues.SubToWatch {
-				SetSimVolumeMetric(&authHeader, url, subpackage, maxSims)
+				SetSimVolumeMetric(&authHeader, url, subpackage, maxSims, badgerDB)
 			}
 		}
+
+		// Mesure details for each sim
+		// Wait for 2 minutes until the SimVolumeMetric is scraped
+		// This is to avoid race conditions as SetSimVolumeMetric will trigger
+		// an Async function to register all Imsi value in the badgerDB
+
+		time.Sleep(2 * time.Minute)
 
 	}
 
