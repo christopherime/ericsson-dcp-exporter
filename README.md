@@ -1,13 +1,21 @@
 # ericsson-dcp-exporter
 
+## Status
+
+✋ **Work in progress**, not ready for production
+
 ## Description
 
 >Ericsson DCP service API Prometheus exporter.
 
 ## TODO
 
-- [ ] Current limitation to max 2000 SIMs, Find a better way to bypass this limitation
-
+- [ ] The current limitation to a max 2000 SIMs, Find a better way to bypass this limitation
+- [ ] Implement external config to allow monitoring of multiple subscription packages
+- [ ] Documentation and GoDoc for all functions
+- [ ] Helm chart deployment
+- [ ] OAuth2 authentication ?? (not sure if it's possible, and will have to learn how to do it)
+- [ ] Rename/restructure the code to be more readable
 
 ## Diagram
 
@@ -18,21 +26,13 @@ flowchart  RL
 ```
 
 - [Go](https://golang.org/doc/install) current (was dev with 1.19, didn't test with other versions)
-- config.yaml file (see [config.yaml](src/config.example.yaml) for an example)
-
-### config.yaml
-
-```yaml
-# subToWatch is a list of subscription to watch
-subToWatch:
-  - "subreddit1"
-  - "subreddit2"
-  - "subreddit3"
-```
+- [DCP Service Portal Documentation](docs/DCP%20Service%20Portal%20API.pdf) PDF documentation of the API
+- [Ericsson Developer Portal](https://iot.developer.ericsson.com/en) Official Ericsson developer website for IoT services development
+- [SOAP example](example/example.xml) Different and formatted SOAP envelope example for DCP API
 
 ## Database
 
-Sims value are store in a database with the following structure:
+Sims values are stored in a database with the following structure:
 
 | Column | Value |
 | --- | --- |
@@ -61,7 +61,7 @@ Sims value are store in a database with the following structure:
 
 | Metric | type | Description | labels | value | implemented |
 | --- | --- | -- | -- | -- | -- |
-| sim_volume | gauge | Number of sim cards in the system | N/A | int | ❌ |
+| sim_volume | gauge | Number of sim cards in the system | N/A | int | ✅ |
 | sim_inventory_status | gauge | Number of SIMs in inventory by status. | status | int | ❌ |
 | sim_inventory_subscription | gauge | Number of SIMs in inventory by subscription. | subscription | int | ❌ |
 
